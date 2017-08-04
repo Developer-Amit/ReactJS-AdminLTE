@@ -39,17 +39,9 @@ var config = {
     },
 
     plugins: [
-        //new webpack.HotModuleReplacementPlugin(),
-        new webpack.ProvidePlugin({
-            '$': "jquery",
-            'window.jQuery': "jquery",
-            'jQuery': 'jquery',
-            'window.$': 'jquery',
-        }),
-        new webpack.optimize.CommonsChunkPlugin('vendors', 'dist/js/vendors.js', Infinity),
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('development')
+                'NODE_ENV': JSON.stringify('production')
             }
         }),
         new webpack.optimize.UglifyJsPlugin({
@@ -61,34 +53,28 @@ var config = {
     ],
     devtool: 'cheap-module-source-map',
     entry: {
-        dashboardV1: './src/pages/dashboardV1/js/dashboard',
-        widgets: ['./src/pages/widgets-page/js/widgets-page'],
-        timeline: './src/pages/timeline-page/js/timeline-page',
-        generalUIElements: './src/pages/ui-elements-page/general/js/page-ui-elements',
-
-        vendors: ['react', 'react-dom', 'jquery', 'velocity-animate', 'jqueryUi', 'bootstrap', 'moment', 'bootstrapDatepicker'],
-        chartVendors: ['jquery', 'raphael', 'morris', 'jvectormap', 'jvectormapWorld'],
+        reactjsAdminlte: './src/widgets.src'
     },
 
     output: {
-        path: path.join(__dirname, "public"),
-        filename: "dist/js/[name].bundle.js",
+        path: path.join(__dirname, "./"),
+        filename: "./[name].js",
         libraryTarget: "umd",
         umdNamedDefine: true,
     },
+    externals: [
+        {
+            'react': 'react',
+            'react-dom': 'react-dom',
+            'jquery': 'jquery',
+            'velocity': 'velocity',
+            'jqueryUI': 'jqueryUI',
+            'moment': 'moment',
+            'raphael': 'raphael'
+        }
+    ],
     module: {
-        noParse: [
-            //new RegExp(node_dir + '/react'),
-            new RegExp(lib_dir + './react-dom.js')
-        ],
         loaders: [
-            { 
-                test: /\.jsx?$/, 
-                loaders: ['react-hot'],
-                include: path.join(__dirname, 'public'),
-                exclude: /(node_modules|bower_components)/
-
-            },
             {
                 loader: 'babel', //'jsx-loader'
                 query: {
